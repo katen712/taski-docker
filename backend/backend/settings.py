@@ -1,14 +1,17 @@
 import os
+from dotenv import load_dotenv
 from pathlib import Path
+
+load_dotenv()
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.getenv('SECRET_KEY', 'default_secret_key_for_tests')
 
-SECRET_KEY = 'django-insecure-j_89af+30&&4qm*8z9_(^zz8p4-ho8z_m6ylm0s$h!-p@on1_^'
+DEBUG = (os.getenv('DEBUG') == 'True')
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 
 # Application definition
