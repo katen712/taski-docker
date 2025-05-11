@@ -1,33 +1,27 @@
-# Файл docker-compose.yml
 version: '3'
 
 volumes:
   pg_data:
-  # Новый volume — для статических файлов
   static:
 
 services:
   db:
-    image: postgres:13.10
-    env_file: .env
+    image: postgres:13
     volumes:
       - pg_data:/var/lib/postgresql/data
   backend:
     build: ./backend/
     env_file: .env
-    # Тут подключаем volume к backend
-    volumes:
-      - static:/backend_static
   frontend:
     env_file: .env
     build: ./frontend/
-    command: cp -r /app/build/. /frontend_static/
+    command: cp -r /app/build/. /static/
     volumes:
-      - static:/frontend_static
+      - static:/static
   gateway:
-    build: ./gateway/
-    # А тут подключаем volume со статикой к gateway
-    volumes:
-      - static:/staticfiles/
+    build: ./nginx/
+    env_file: .env
     ports:
-      - 8000:80
+      - 9000:80
+    volumes:
+      - static:/static
